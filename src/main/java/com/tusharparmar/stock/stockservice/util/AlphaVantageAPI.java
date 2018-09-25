@@ -1,9 +1,11 @@
 package com.tusharparmar.stock.stockservice.util;
 
+import com.google.common.base.Joiner;
 import org.patriques.AlphaVantageConnector;
 import org.patriques.BatchStockQuotes;
 import org.patriques.output.quote.data.StockQuote;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -13,29 +15,18 @@ public class AlphaVantageAPI
 	private static AlphaVantageConnector apiConnector       = new AlphaVantageConnector("DKM2E8CSJ9WV4KD4", 3000);
 	private static BatchStockQuotes      batchStockQuotes   = new BatchStockQuotes(apiConnector);
 
-	public static StockQuote getStock(String symbol)
+	public static List<StockQuote> getStocks(List<String> listSymbols)
 	{
+		String symbols = Joiner.on(",").join(listSymbols);
+		List<StockQuote> out = new ArrayList<>();
 		try
 		{
-			return batchStockQuotes.quote(symbol).getStockQuotes().get(0);
+			out = batchStockQuotes.quote(symbols).getStockQuotes();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			return new StockQuote(symbol,0,0,null);
 		}
+		return out;
 	}
-
-	/*public static StockQuote getStocks(List<String> symbols)
-	{
-		try
-		{
-			return batchStockQuotes.quote(symbol).getStockQuotes().get(0);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return new StockQuote(symbol,0,0,null);
-		}
-	}*/
 }

@@ -31,12 +31,12 @@ public class StockResource
 	@GetMapping("/{username}")
 	public List<StockQuote> getStock(@PathVariable("username") final String username)
 	{
-		ResponseEntity<List<String>> quoteResponse = restTemplate.exchange("http://localhost:8300/rest/db/" + username, HttpMethod.GET,
+		ResponseEntity<List<String>> quoteResponse = restTemplate.exchange("http://db-service/rest/db/" + username, HttpMethod.GET,
 				null, new ParameterizedTypeReference<List<String>>() { });
 
 
 		List<String> quotes = quoteResponse.getBody();
-		return quotes.stream().map(AlphaVantageAPI::getStock).collect(Collectors.toList());
+		return AlphaVantageAPI.getStocks(quotes);
 	}
 
 }
